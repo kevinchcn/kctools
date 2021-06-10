@@ -1,0 +1,6 @@
+FROM amazon/aws-cli:latest
+
+# Install packages.  
+RUN yum install openssh-clients jq -y
+COPY id_aws_rsa /root
+ENTRYPOINT [""]

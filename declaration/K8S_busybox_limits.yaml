@@ -1,0 +1,36 @@
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: nfs-busybox-pvc
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      name: nfs-busybox-pvc
+  template:
+    metadata:
+      labels:
+        name: nfs-busybox-pvc
+    spec:
+      containers:
+      - image: busybox
+        command:
+          - sh
+          - -c
+          - 'while true; do date > /mnt/index.html; hostname >> /mnt/index.html; sleep 10m; done'
+        imagePullPolicy: IfNotPresent
+        name: busybox
+        volumeMounts:
+          - name: nfs
+            mountPath: "/tmp"
+        resources:
+          limits:
+            cpu: 200m
+            memory: 256Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+      volumes:
+      - name: nfs
+        persistentVolumeClaim:
+          claimName: db
